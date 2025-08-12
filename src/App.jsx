@@ -1,5 +1,14 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate, Link, useNavigate, useLocation, useParams } from "react-router-dom";
+import {
+  BrowserRouter as Router,      // ← CAMBIO: BrowserRouter para URLs limpias
+  Routes,
+  Route,
+  Navigate,
+  Link,
+  useNavigate,
+  useLocation,
+  useParams,
+} from "react-router-dom";
 import { motion } from "framer-motion";
 
 import { Button } from "./components/ui/button";
@@ -35,7 +44,7 @@ import {
 
 /** =========================================================
  *  Frontend "Panadería Pan Dorado" — listo para GitHub Pages
- *  - HashRouter para evitar 404
+ *  - BrowserRouter + basename para URLs limpias
  *  - Assets con import.meta.env.BASE_URL
  *  - Login pro + Dashboard con módulos funcionales
  *  =======================================================*/
@@ -68,7 +77,7 @@ function AdminLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const avatarSrc = React.useMemo(
-    () => localStorage.getItem("adminAvatar") || `${BASE}logo.png`,
+    () => localStorage.getItem("adminAvatar") || `${BASE}avatar-admin.png`,
     []
   );
 
@@ -218,7 +227,7 @@ function LoginPage() {
       <div className="relative hidden lg:block">
         <div
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${BASE}hero.jpg)` }} // <<--- BASE
+          style={{ backgroundImage: `url(${BASE}hero.jpg)` }}
         />
         <div className="absolute inset-0 bg-gradient-to-br from-amber-900/70 via-amber-700/60 to-orange-600/60" />
         <div className="relative z-10 h-full flex items-end p-12 text-white">
@@ -785,8 +794,11 @@ function NewDelivery() {
 function SalesList() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [rows, setRows] = React.useState(() => lsGet("ventas"));
-  React.useEffect(() => setRows(lsGet("ventas")), [location.key]);
+
+  const [rows, setRows] = React.useState(() => lsGet("ventas")); // ← corregido
+  React.useEffect(() => {
+    setRows(lsGet("ventas"));
+  }, [location.key]);
 
   const demo = [
     { id: 9001, cliente: "Mostrador", pago: "Efectivo", total: 25.5, fecha: "12/08/2025" },
@@ -1252,7 +1264,7 @@ function SettingsPage() {
 // ========================= App (rutas) =========================
 export default function App() {
   return (
-    <Router>
+    <Router basename={import.meta.env.BASE_URL}> {/* ← CAMBIO: basename para subruta /<repo>/ */}
       <Routes>
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<LoginPage />} />
