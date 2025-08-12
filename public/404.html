@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Redireccionando…</title>
+  </head>
+  <body>
+    <script>
+      (function () {
+        // Base del repo: /usuario.github.io/REPO/ → calcular /REPO/
+        var path = window.location.pathname;
+        var base = path.split('/').slice(0, -1).join('/') + '/'; // ej: /REPO/
+
+        // Guarda la ruta completa para restaurarla en index.html
+        sessionStorage.redirect = path.replace(base, '') + window.location.search + window.location.hash;
+
+        // Vuelve a la raíz del sitio (index.html)
+        window.location.replace(base);
+      })();
+    </script>
+  </body>
+</html>
