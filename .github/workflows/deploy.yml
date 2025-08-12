@@ -21,8 +21,7 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - run: npm run build
-      # Fallback SPA: servir index.html también como 404.html
-      - run: cp dist/index.html dist/404.html
+      - run: cp dist/index.html dist/404.html   # fallback SPA
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
