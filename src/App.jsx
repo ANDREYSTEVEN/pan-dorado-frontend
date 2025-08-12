@@ -77,7 +77,7 @@ function AdminLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const avatarSrc = React.useMemo(
-    () => localStorage.getItem("adminAvatar") || `${BASE}avatar-admin.png`,
+    () => localStorage.getItem("adminAvatar") || `${BASE}logo.png`,
     []
   );
 
