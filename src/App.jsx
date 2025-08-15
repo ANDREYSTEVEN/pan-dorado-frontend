@@ -204,10 +204,20 @@ function AdminLayout() {
 function EnvelopeCard({ children, logoSrc, brand }) {
   return (
     <div className="group relative mx-auto w-full max-w-lg [perspective:1400px]">
-      {/* Cuerpo de la carta */}
       <div className="relative overflow-hidden rounded-2xl border border-amber-100/80 bg-white/95 shadow-2xl transition-shadow duration-300 group-hover:shadow-[0_30px_80px_-20px_rgba(0,0,0,0.35)]">
 
-        {/* Fondo interactivo con logo (solo mientras está cerrada) */}
+        {/* 1) Cuña de fondo: SIEMPRE visible y por DEBAJO del contenido */}
+        <div
+          className="
+            pointer-events-none absolute left-1/2 top-0 z-0
+            h-32 w-[160%] -translate-x-1/2
+            [clip-path:polygon(55%_0%,100%_100%,0%_100%)]
+            bg-[linear-gradient(120deg,rgba(251,191,36,0.25),rgba(253,230,138,0.18),transparent_70%)]
+            blur-[0.5px]
+          "
+        />
+
+        {/* 2) Fondo interactivo con logo (solo cuando está cerrada) */}
         <div
           className="
             pointer-events-none absolute inset-0 z-10 grid place-items-center
@@ -216,45 +226,31 @@ function EnvelopeCard({ children, logoSrc, brand }) {
             max-sm:opacity-0
           "
         >
-          {/* sutil resplandor radial */}
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(251,191,36,0.10),transparent_60%)]" />
           <div className="relative flex flex-col items-center">
             <div className="grid place-items-center h-16 w-16 rounded-2xl bg-amber-100/95 ring-1 ring-amber-200 shadow-md backdrop-blur-sm animate-float-soft">
               <img src={logoSrc} alt="" className="h-8 w-8" />
             </div>
-            {brand && (
-              <div className="mt-3 text-amber-800/90 text-sm font-medium">{brand}</div>
-            )}
+            {brand && <div className="mt-3 text-amber-800/90 text-sm font-medium">{brand}</div>}
           </div>
         </div>
 
-        {/* Solapa (flap) superior — se oculta al abrir */}
+        {/* 3) Solapa (flap) animada — se oculta al abrir para evitar líneas */}
         <div
           className="
             absolute left-1/2 top-0 z-20 h-28 w-[130%] -translate-x-1/2 origin-top
             [clip-path:polygon(50%_0%,100%_100%,0%_100%)]
             bg-gradient-to-b from-amber-200 to-amber-100
-
-            /* Cerrada (visible) */
-            [transform:perspective(1000px)_rotateX(0deg)]
-            opacity-100
-
-            /* Abierta (hover/focus): rota hacia atrás y desvanece */
+            [transform:perspective(1000px)_rotateX(0deg)] opacity-100
             group-hover:[transform:perspective(1000px)_rotateX(-120deg)_translateY(-6px)]
             group-focus-within:[transform:perspective(1000px)_rotateX(-120deg)_translateY(-6px)]
-            group-hover:opacity-0
-            group-focus-within:opacity-0
-
-            /* En móvil, abierta por defecto */
-            max-sm:[transform:perspective(1000px)_rotateX(-120deg)_translateY(-6px)]
-            max-sm:opacity-0
-
-            transition-transform duration-500 ease-out
-            transition-opacity duration-500
+            group-hover:opacity-0 group-focus-within:opacity-0
+            max-sm:[transform:perspective(1000px)_rotateX(-120deg)_translateY(-6px)] max-sm:opacity-0
+            transition-transform duration-500 ease-out transition-opacity
           "
         />
 
-        {/* Contenido que se despliega */}
+        {/* 4) Contenido por ENCIMA de la cuña */}
         <div
           className="
             relative z-30 px-8 pt-12 pb-8
