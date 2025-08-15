@@ -68,5 +68,13 @@ body {
   .smooth-open { transition: max-height .5s ease, opacity .5s ease; }
 }
 
+@keyframes float-soft {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+  100% { transform: translateY(0); }
+}
+.animate-float-soft { animation: float-soft 3.6s ease-in-out infinite; }
+
+
 /* Fondo translúcido de inputs sobre video (si quieres reforzar) */
 /*.input-surface { background: rgba(255,255,255,.95); backdrop-filter: blur(2px); }*/

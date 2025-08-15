@@ -200,16 +200,38 @@ function AdminLayout() {
   );
 }
 
-/* --- Mini-componente: Carta que se abre con hover/focus --- */
-function EnvelopeCard({ children }) {
+/* --- Mini-componente: Carta con fondo de logo cuando está cerrada --- */
+function EnvelopeCard({ children, logoSrc, brand }) {
   return (
     <div className="group relative mx-auto w-full max-w-lg [perspective:1400px]">
       {/* Cuerpo de la carta */}
       <div className="relative overflow-hidden rounded-2xl border border-amber-100/80 bg-white/95 shadow-2xl transition-shadow duration-300 group-hover:shadow-[0_30px_80px_-20px_rgba(0,0,0,0.35)]">
+
+        {/* Fondo interactivo con logo (solo mientras está cerrada) */}
+        <div
+          className="
+            pointer-events-none absolute inset-0 z-10 grid place-items-center
+            transition-opacity duration-500
+            group-hover:opacity-0 group-focus-within:opacity-0
+            max-sm:opacity-0
+          "
+        >
+          {/* sutil resplandor radial */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(251,191,36,0.10),transparent_60%)]" />
+          <div className="relative flex flex-col items-center">
+            <div className="grid place-items-center h-16 w-16 rounded-2xl bg-amber-100/95 ring-1 ring-amber-200 shadow-md backdrop-blur-sm animate-float-soft">
+              <img src={logoSrc} alt="" className="h-8 w-8" />
+            </div>
+            {brand && (
+              <div className="mt-3 text-amber-800/90 text-sm font-medium">{brand}</div>
+            )}
+          </div>
+        </div>
+
         {/* Solapa (flap) superior */}
         <div
           className="
-            absolute left-1/2 top-0 h-28 w-[120%] -translate-x-1/2 origin-top
+            absolute left-1/2 top-0 z-20 h-28 w-[120%] -translate-x-1/2 origin-top
             [clip-path:polygon(50%_0%,100%_100%,0%_100%)]
             bg-gradient-to-b from-amber-200 to-amber-100
             [transform:perspective(1000px)_rotateX(88deg)]
@@ -222,7 +244,7 @@ function EnvelopeCard({ children }) {
         {/* Contenido que se despliega */}
         <div
           className="
-            px-8 pt-12 pb-8
+            relative z-30 px-8 pt-12 pb-8
             transition-[max-height,opacity] duration-500 ease-out overflow-hidden
             max-h-28 opacity-0
             group-hover:max-h-[1000px] group-hover:opacity-100
@@ -237,7 +259,7 @@ function EnvelopeCard({ children }) {
   );
 }
 
-/* --- LOGIN PAGE (con tu layout inicial + carta animada) --- */
+/* --- LOGIN PAGE (layout inicial + carta animada con logo de fondo) --- */
 function LoginPage() {
   const navigate = useNavigate();
   const [email, setEmail] = React.useState("");
@@ -302,9 +324,9 @@ function LoginPage() {
           <rect width="100%" height="100%" filter="url(#noiseFilter)" />
         </svg>
 
-        {/* Carta animada: sustituye al Card tradicional */}
+        {/* Carta animada con logo de fondo */}
         <div className="relative z-10 w-full max-w-2xl">
-          <EnvelopeCard>
+          <EnvelopeCard logoSrc={`${BASE}logo.png`} brand="Panadería Pan Dorado">
             {/* Header */}
             <div className="text-center mb-4">
               <div className="mx-auto h-14 w-14 rounded-2xl bg-amber-100 flex items-center justify-center shadow">
@@ -314,7 +336,7 @@ function LoginPage() {
               <p className="text-sm text-neutral-500">Accede al panel de administración</p>
             </div>
 
-            {/* Formulario (idéntico al tuyo) */}
+            {/* Formulario */}
             <form onSubmit={onSubmit} className="space-y-6">
               <div className="grid gap-3">
                 <Label htmlFor="email">Correo</Label>
@@ -340,7 +362,6 @@ function LoginPage() {
                     ¿Olvidaste tu contraseña?
                   </button>
                 </div>
-
                 <div className="relative">
                   <Input
                     id="password"
@@ -362,12 +383,7 @@ function LoginPage() {
                 </div>
 
                 <div className="flex items-center gap-2 text-sm">
-                  <input
-                    id="remember"
-                    type="checkbox"
-                    className="h-4 w-4 rounded border-amber-300 text-amber-600"
-                    defaultChecked
-                  />
+                  <input id="remember" type="checkbox" className="h-4 w-4 rounded border-amber-300 text-amber-600" defaultChecked />
                   <Label htmlFor="remember">Recordarme en este equipo</Label>
                 </div>
               </div>
@@ -380,14 +396,8 @@ function LoginPage() {
 
               <div className="pt-1 text-xs text-neutral-500 text-center">
                 Al continuar aceptas nuestras{" "}
-                <a className="underline hover:text-amber-700" href="#">
-                  Condiciones
-                </a>{" "}
-                y{" "}
-                <a className="underline hover:text-amber-700" href="#">
-                  Privacidad
-                </a>
-                .
+                <a className="underline hover:text-amber-700" href="#">Condiciones</a> y{" "}
+                <a className="underline hover:text-amber-700" href="#">Privacidad</a>.
               </div>
             </form>
           </EnvelopeCard>
