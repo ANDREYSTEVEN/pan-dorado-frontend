@@ -203,25 +203,29 @@ function AdminLayout() {
 function EnvelopeCard({ children, logoSrc, brand }) {
   return (
     <div className="group relative mx-auto w-full max-w-lg [perspective:1400px]">
-      <div className="relative overflow-hidden rounded-2xl border border-amber-100/80 bg-white/95 shadow-2xl transition-shadow duration-300 group-hover:shadow-[0_30px_80px_-20px_rgba(0,0,0,0.35)]">
+      <div className="relative overflow-hidden rounded-2xl border border-amber-100/80 bg-white shadow-2xl transition-shadow duration-300 group-hover:shadow-[0_30px_80px_-20px_rgba(0,0,0,0.35)]">
+        {/* ===== Fondo base (muy sutil, sin diagonales) ===== */}
+        <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_top,rgba(251,191,36,0.12),transparent_55%)]" />
 
-        {/* ===== Fondo limpio: SOLO resplandor radial (sin diagonales) ===== */}
-        <div
-          className="
-            pointer-events-none absolute inset-0 z-0
-            bg-[radial-gradient(ellipse_at_top,rgba(251,191,36,0.16),transparent_55%)]
-          "
-        />
+        {/* ===== “Pulido” y vignette SOLO cuando está cerrada ===== */}
+        <div className="pointer-events-none absolute inset-0 z-10 transition-opacity duration-500 group-hover:opacity-0 group-focus-within:opacity-0 max-sm:opacity-0">
+          {/* banda de brillo en la parte superior (gloss) */}
+          <div className="absolute inset-0 bg-gradient-to-b from-white/65 via-white/25 to-transparent [mask-image:linear-gradient(to_bottom,black_0%,black_42%,transparent_60%)]" />
+          {/* vignette cálido superior-izquierdo */}
+          <div className="absolute inset-0 bg-[radial-gradient(120%_60%_at_15%_0%,rgba(251,191,36,0.18),transparent_60%)]" />
+          {/* resplandor inferior-derecha (radial, sin bordes) */}
+          <div className="absolute inset-0 bg-[radial-gradient(90%_70%_at_120%_85%,rgba(253,230,138,0.18),transparent_60%)]" />
+          {/* grano sutil */}
+          <svg className="absolute inset-0 opacity-[0.035] mix-blend-multiply" aria-hidden="true">
+            <filter id="noiseFilter">
+              <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch" />
+            </filter>
+            <rect width="100%" height="100%" filter="url(#noiseFilter)" />
+          </svg>
+        </div>
 
-        {/* ===== Overlay de estado cerrado (logo) — ahora z-5, debajo del contenido ===== */}
-        <div
-          className="
-            pointer-events-none absolute inset-0 z-5 grid place-items-center
-            transition-opacity duration-500
-            group-hover:opacity-0 group-focus-within:opacity-0
-            max-sm:opacity-0
-          "
-        >
+        {/* ===== Overlay con logo SOLO cerrada (debajo del contenido) ===== */}
+        <div className="pointer-events-none absolute inset-0 z-20 grid place-items-center transition-opacity duration-500 group-hover:opacity-0 group-focus-within:opacity-0 max-sm:opacity-0">
           <div className="relative flex flex-col items-center">
             <div className="grid place-items-center h-16 w-16 rounded-2xl bg-amber-100/95 ring-1 ring-amber-200 shadow-md backdrop-blur-sm animate-float-soft">
               <img src={logoSrc} alt="" className="h-8 w-8" />
@@ -230,40 +234,14 @@ function EnvelopeCard({ children, logoSrc, brand }) {
           </div>
         </div>
 
-        {/* ===== Solapa (flap) — solo para la animación; se oculta al abrir ===== }
-        <div
-          className="
-            absolute left-1/2 top-0 z-20 h-28 w-[130%] -translate-x-1/2 origin-top
-            [clip-path:polygon(50%_0%,100%_100%,0%_100%)]
-            bg-gradient-to-b from-amber-200 to-amber-100
-            [transform:perspective(1000px)_rotateX(0deg)] opacity-100
-            group-hover:[transform:perspective(1000px)_rotateX(-120deg)_translateY(-6px)]
-            group-focus-within:[transform:perspective(1000px)_rotateX(-120deg)_translateY(-6px)]
-            group-hover:opacity-0 group-focus-within:opacity-0
-            max-sm:[transform:perspective(1000px)_rotateX(-120deg)_translateY(-6px)] max-sm:opacity-0
-            transition-transform duration-500 ease-out transition-opacity
-          "
-        />
-
-        {/* ===== Contenido (siempre por encima) ===== */}
-        <div
-          className="
-            relative z-30 px-8 pt-12 pb-8
-            transition-[max-height,opacity] duration-500 ease-out overflow-hidden
-            max-h-28 opacity-0
-            group-hover:max-h-[1000px] group-hover:opacity-100
-            group-focus-within:max-h-[1000px] group-focus-within:opacity-100
-            max-sm:max-h-[1000px] max-sm:opacity-100
-          "
-        >
+        {/* ===== Contenido (siempre arriba) ===== */}
+        <div className="relative z-30 px-8 pt-12 pb-8 transition-[max-height,opacity] duration-500 ease-out overflow-hidden max-h-28 opacity-0 group-hover:max-h-[1000px] group-hover:opacity-100 group-focus-within:max-h-[1000px] group-focus-within:opacity-100 max-sm:max-h-[1000px] max-sm:opacity-100">
           {children}
         </div>
       </div>
     </div>
   );
 }
-
-
 
 /* --- LOGIN PAGE (layout inicial + carta animada con logo de fondo) --- */
 function LoginPage() {
