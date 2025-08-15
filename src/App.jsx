@@ -200,7 +200,44 @@ function AdminLayout() {
   );
 }
 
-// ========================= Login =========================
+/* --- Mini-componente: Carta que se abre con hover/focus --- */
+function EnvelopeCard({ children }) {
+  return (
+    <div className="group relative mx-auto w-full max-w-lg [perspective:1400px]">
+      {/* Cuerpo de la carta */}
+      <div className="relative overflow-hidden rounded-2xl border border-amber-100/80 bg-white/95 shadow-2xl transition-shadow duration-300 group-hover:shadow-[0_30px_80px_-20px_rgba(0,0,0,0.35)]">
+        {/* Solapa (flap) superior */}
+        <div
+          className="
+            absolute left-1/2 top-0 h-28 w-[120%] -translate-x-1/2 origin-top
+            [clip-path:polygon(50%_0%,100%_100%,0%_100%)]
+            bg-gradient-to-b from-amber-200 to-amber-100
+            [transform:perspective(1000px)_rotateX(88deg)]
+            group-hover:[transform:perspective(1000px)_rotateX(0deg)]
+            group-focus-within:[transform:perspective(1000px)_rotateX(0deg)]
+            transition-transform duration-500 ease-out
+          "
+        />
+
+        {/* Contenido que se despliega */}
+        <div
+          className="
+            px-8 pt-12 pb-8
+            transition-[max-height,opacity] duration-500 ease-out overflow-hidden
+            max-h-28 opacity-0
+            group-hover:max-h-[1000px] group-hover:opacity-100
+            group-focus-within:max-h-[1000px] group-focus-within:opacity-100
+            max-sm:max-h-[1000px] max-sm:opacity-100
+          "
+        >
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* --- LOGIN PAGE (con tu layout inicial + carta animada) --- */
 function LoginPage() {
   const navigate = useNavigate();
   const [email, setEmail] = React.useState("");
@@ -208,6 +245,7 @@ function LoginPage() {
   const [showPass, setShowPass] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
+  const BASE = import.meta.env.BASE_URL || "/";
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -250,8 +288,9 @@ function LoginPage() {
         </div>
       </div>
 
-      {/* Columna derecha: fondo profesional + card */}
+      {/* Columna derecha */}
       <div className="relative grid place-items-center py-20 px-6 md:px-10 lg:px-16 xl:px-24 overflow-hidden">
+        {/* Fondo suave y acentos */}
         <div className="absolute inset-0 bg-gradient-to-br from-white via-amber-50/70 to-white" />
         <div className="absolute -right-40 -top-40 h-[60rem] w-[60rem] rotate-12 bg-[conic-gradient(from_220deg_at_50%_50%,#f59e0b22,#fbbf2420,#fde68a1a,transparent_60%)] blur-2xl" />
         <div className="absolute -right-24 bottom-10 h-72 w-72 rounded-full bg-orange-200/35 blur-3xl" />
@@ -263,87 +302,95 @@ function LoginPage() {
           <rect width="100%" height="100%" filter="url(#noiseFilter)" />
         </svg>
 
+        {/* Carta animada: sustituye al Card tradicional */}
         <div className="relative z-10 w-full max-w-2xl">
-          <Card className="w-full max-w-lg mx-auto rounded-2xl border-amber-100/80 shadow-2xl">
-            <CardHeader className="px-8 pt-8 pb-4 text-center">
+          <EnvelopeCard>
+            {/* Header */}
+            <div className="text-center mb-4">
               <div className="mx-auto h-14 w-14 rounded-2xl bg-amber-100 flex items-center justify-center shadow">
                 <img src={`${BASE}logo.png`} alt="logo" className="h-7 w-7" />
               </div>
-              <CardTitle className="mt-3 text-2xl text-amber-900">Inicia sesión</CardTitle>
+              <h3 className="mt-3 text-2xl text-amber-900 font-semibold">Inicia sesión</h3>
               <p className="text-sm text-neutral-500">Accede al panel de administración</p>
-            </CardHeader>
+            </div>
 
-            <CardContent className="px-8 pb-8">
-              <form onSubmit={onSubmit} className="space-y-6">
-                <div className="grid gap-3">
-                  <Label htmlFor="email">Correo</Label>
+            {/* Formulario (idéntico al tuyo) */}
+            <form onSubmit={onSubmit} className="space-y-6">
+              <div className="grid gap-3">
+                <Label htmlFor="email">Correo</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="admin@pandorado.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="h-11 text-[15px]"
+                />
+              </div>
+
+              <div className="grid gap-3">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="password">Contraseña</Label>
+                  <button
+                    type="button"
+                    className="text-xs text-amber-700 hover:underline"
+                    onClick={() => alert("Implementa tu recuperación de contraseña")}
+                  >
+                    ¿Olvidaste tu contraseña?
+                  </button>
+                </div>
+
+                <div className="relative">
                   <Input
-                    id="email"
-                    type="email"
-                    placeholder="admin@pandorado.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    id="password"
+                    type={showPass ? "text" : "password"}
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     required
-                    className="h-11 text-[15px]"
+                    className="h-11 text-[15px] pr-9"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPass((v) => !v)}
+                    className="absolute inset-y-0 right-2 flex items-center px-2 text-neutral-500 hover:text-amber-700"
+                    aria-label={showPass ? "Ocultar contraseña" : "Mostrar contraseña"}
+                  >
+                    {showPass ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
                 </div>
 
-                <div className="grid gap-3">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="password">Contraseña</Label>
-                    <button
-                      type="button"
-                      className="text-xs text-amber-700 hover:underline"
-                      onClick={() => alert("Implementa tu recuperación de contraseña")}
-                    >
-                      ¿Olvidaste tu contraseña?
-                    </button>
-                  </div>
-                  <div className="relative">
-                    <Input
-                      id="password"
-                      type={showPass ? "text" : "password"}
-                      placeholder="••••••••"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                      className="h-11 text-[15px] pr-9"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPass((v) => !v)}
-                      className="absolute inset-y-0 right-2 flex items-center px-2 text-neutral-500 hover:text-amber-700"
-                      aria-label={showPass ? "Ocultar contraseña" : "Mostrar contraseña"}
-                    >
-                      {showPass ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                    </button>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <input id="remember" type="checkbox" className="h-4 w-4 rounded border-amber-300 text-amber-600" defaultChecked />
-                    <Label htmlFor="remember">Recordarme en este equipo</Label>
-                  </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <input
+                    id="remember"
+                    type="checkbox"
+                    className="h-4 w-4 rounded border-amber-300 text-amber-600"
+                    defaultChecked
+                  />
+                  <Label htmlFor="remember">Recordarme en este equipo</Label>
                 </div>
+              </div>
 
-                {error && <p className="text-sm text-red-600">{error}</p>}
+              {error && <p className="text-sm text-red-600">{error}</p>}
 
-                <Button type="submit" className="w-full h-11 text-[15px]" disabled={loading}>
-                  {loading ? "Ingresando..." : "Entrar"}
-                </Button>
+              <Button type="submit" className="w-full h-11 text-[15px]" disabled={loading}>
+                {loading ? "Ingresando..." : "Entrar"}
+              </Button>
 
-                <div className="pt-1 text-xs text-neutral-500 text-center">
-                  Al continuar aceptas nuestras{" "}
-                  <a className="underline hover:text-amber-700" href="#">
-                    Condiciones
-                  </a>{" "}
-                  y{" "}
-                  <a className="underline hover:text-amber-700" href="#">
-                    Privacidad
-                  </a>
-                  .
-                </div>
-              </form>
-            </CardContent>
-          </Card>
+              <div className="pt-1 text-xs text-neutral-500 text-center">
+                Al continuar aceptas nuestras{" "}
+                <a className="underline hover:text-amber-700" href="#">
+                  Condiciones
+                </a>{" "}
+                y{" "}
+                <a className="underline hover:text-amber-700" href="#">
+                  Privacidad
+                </a>
+                .
+              </div>
+            </form>
+          </EnvelopeCard>
         </div>
 
         <div className="absolute bottom-4 left-0 right-0 mx-auto text-center text-xs text-neutral-500">

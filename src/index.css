@@ -63,5 +63,10 @@ body {
   box-shadow: 0 0 0 4px rgba(245, 158, 11, .25); /* amber */
 }
 
+/* Suaviza las animaciones de apertura (opcional) */
+@media (prefers-reduced-motion: no-preference) {
+  .smooth-open { transition: max-height .5s ease, opacity .5s ease; }
+}
+
 /* Fondo translúcido de inputs sobre video (si quieres reforzar) */
 /*.input-surface { background: rgba(255,255,255,.95); backdrop-filter: blur(2px); }*/
