@@ -200,29 +200,17 @@ function AdminLayout() {
   );
 }
 
-/* --- Mini-componente: Carta con fondo de logo cuando está cerrada --- */
 function EnvelopeCard({ children, logoSrc, brand }) {
   return (
     <div className="group relative mx-auto w-full max-w-lg [perspective:1400px]">
       <div className="relative overflow-hidden rounded-2xl border border-amber-100/80 bg-white/95 shadow-2xl transition-shadow duration-300 group-hover:shadow-[0_30px_80px_-20px_rgba(0,0,0,0.35)]">
-
-        {/* ===== Fondo: banda suave superior (sin línea derecha) ===== */}
-        <div className="pointer-events-none absolute inset-0 z-0">
-          <div
-            className="
-              absolute inset-x-0 top-0 h-28 -translate-y-px
-              /* Banda inclinada cálida */
-              bg-[linear-gradient(165deg,rgba(251,191,36,0.22)_20%,rgba(253,230,138,0.14)_40%,transparent_62%)]
-              /* Se difumina hacia la derecha antes del centro: evita 'rayas' */
-              [mask-image:linear-gradient(to_right,black_0%,black_52%,transparent_60%)]
-              blur-[0.3px]
-              transition-opacity duration-500
-              group-hover:opacity-0 group-focus-within:opacity-0
-              max-sm:opacity-0
-            "
-          />
-          {/* ⚠️ No hay cuña derecha */}
-        </div>
+        {/* ===== Fondo limpio (solo resplandor radial, SIN cuñas) ===== */}
+        <div
+          className="
+            pointer-events-none absolute inset-0 z-0
+            bg-[radial-gradient(ellipse_at_top,rgba(251,191,36,0.16),transparent_55%)]
+          "
+        />
 
         {/* Fondo con logo mientras está cerrada */}
         <div
@@ -233,7 +221,6 @@ function EnvelopeCard({ children, logoSrc, brand }) {
             max-sm:opacity-0
           "
         >
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(251,191,36,0.10),transparent_60%)]" />
           <div className="relative flex flex-col items-center">
             <div className="grid place-items-center h-16 w-16 rounded-2xl bg-amber-100/95 ring-1 ring-amber-200 shadow-md backdrop-blur-sm animate-float-soft">
               <img src={logoSrc} alt="" className="h-8 w-8" />
@@ -274,6 +261,7 @@ function EnvelopeCard({ children, logoSrc, brand }) {
     </div>
   );
 }
+
 
 
 /* --- LOGIN PAGE (layout inicial + carta animada con logo de fondo) --- */
