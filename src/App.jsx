@@ -228,16 +228,29 @@ function EnvelopeCard({ children, logoSrc, brand }) {
           </div>
         </div>
 
-        {/* Solapa (flap) superior */}
+        {/* Solapa (flap) superior — se oculta al abrir */}
         <div
           className="
-            absolute left-1/2 top-0 z-20 h-28 w-[120%] -translate-x-1/2 origin-top
+            absolute left-1/2 top-0 z-20 h-28 w-[130%] -translate-x-1/2 origin-top
             [clip-path:polygon(50%_0%,100%_100%,0%_100%)]
             bg-gradient-to-b from-amber-200 to-amber-100
-            [transform:perspective(1000px)_rotateX(88deg)]
-            group-hover:[transform:perspective(1000px)_rotateX(0deg)]
-            group-focus-within:[transform:perspective(1000px)_rotateX(0deg)]
+
+            /* Cerrada (visible) */
+            [transform:perspective(1000px)_rotateX(0deg)]
+            opacity-100
+
+            /* Abierta (hover/focus): rota hacia atrás y desvanece */
+            group-hover:[transform:perspective(1000px)_rotateX(-120deg)_translateY(-6px)]
+            group-focus-within:[transform:perspective(1000px)_rotateX(-120deg)_translateY(-6px)]
+            group-hover:opacity-0
+            group-focus-within:opacity-0
+
+            /* En móvil, abierta por defecto */
+            max-sm:[transform:perspective(1000px)_rotateX(-120deg)_translateY(-6px)]
+            max-sm:opacity-0
+
             transition-transform duration-500 ease-out
+            transition-opacity duration-500
           "
         />
 
