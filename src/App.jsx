@@ -206,7 +206,7 @@ function EnvelopeCard({ children, logoSrc, brand }) {
     <div className="group relative mx-auto w-full max-w-lg [perspective:1400px]">
       <div className="relative overflow-hidden rounded-2xl border border-amber-100/80 bg-white/95 shadow-2xl transition-shadow duration-300 group-hover:shadow-[0_30px_80px_-20px_rgba(0,0,0,0.35)]">
 
-        {/* ===== Fondo: SOLO cuña izquierda, sin bordes duros ===== */}
+        {/* ===== Fondo: SOLO cuña izquierda (suave) ===== */}
         <div className="pointer-events-none absolute inset-0 z-0">
           <div
             className="
@@ -220,9 +220,10 @@ function EnvelopeCard({ children, logoSrc, brand }) {
               max-sm:opacity-0
             "
           />
+          {/* ⚠️ La cuña derecha se ELIMINA para evitar la raya sobre el texto */}
         </div>
 
-        {/* ===== Fondo interactivo con logo (visible SOLO cerrada) ===== */}
+        {/* Fondo con logo mientras está cerrada */}
         <div
           className="
             pointer-events-none absolute inset-0 z-10 grid place-items-center
@@ -240,30 +241,22 @@ function EnvelopeCard({ children, logoSrc, brand }) {
           </div>
         </div>
 
-        {/* ===== Solapa (flap) — se oculta al abrir ===== */}
+        {/* Solapa (flap) — se oculta al abrir */}
         <div
           className="
             absolute left-1/2 top-0 z-20 h-28 w-[130%] -translate-x-1/2 origin-top
             [clip-path:polygon(50%_0%,100%_100%,0%_100%)]
             bg-gradient-to-b from-amber-200 to-amber-100
-
-            /* Cerrada (visible) */
             [transform:perspective(1000px)_rotateX(0deg)] opacity-100
-
-            /* Abierta (hover/focus): rota hacia atrás y desvanece */
             group-hover:[transform:perspective(1000px)_rotateX(-120deg)_translateY(-6px)]
             group-focus-within:[transform:perspective(1000px)_rotateX(-120deg)_translateY(-6px)]
             group-hover:opacity-0 group-focus-within:opacity-0
-
-            /* En móvil, abierta por defecto */
-            max-sm:[transform:perspective(1000px)_rotateX(-120deg)_translateY(-6px)]
-            max-sm:opacity-0
-
+            max-sm:[transform:perspective(1000px)_rotateX(-120deg)_translateY(-6px)] max-sm:opacity-0
             transition-transform duration-500 ease-out transition-opacity
           "
         />
 
-        {/* ===== Contenido (encima) ===== */}
+        {/* Contenido */}
         <div
           className="
             relative z-30 px-8 pt-12 pb-8
@@ -280,6 +273,7 @@ function EnvelopeCard({ children, logoSrc, brand }) {
     </div>
   );
 }
+
 
 
 /* --- LOGIN PAGE (layout inicial + carta animada con logo de fondo) --- */
