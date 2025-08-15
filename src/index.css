@@ -2,5 +2,40 @@
 @tailwind components;
 @tailwind utilities;
 
-:root { color-scheme: light; }
-body { font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji'; background: #fff; }
+/* Preferencia de tema claro */
+:root { 
+  color-scheme: light; 
+}
+
+/* Box-sizing consistente en toda la app */
+* { 
+  box-sizing: border-box; 
+}
+
+/* Suavizado de fuentes en diferentes motores */
+html, body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Tipografía y fondo global */
+body { 
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  background-color: #fffbeb; /* amber-50 | usa #fff si prefieres blanco */
+}
+
+/* Scrollbar sutil (solo WebKit) */
+::-webkit-scrollbar { 
+  width: 10px; 
+  height: 10px; 
+}
+::-webkit-scrollbar-thumb { 
+  background: #eab30844; 
+  border-radius: 8px; 
+}
+
+/* Selección de texto con un toque de marca */
+::selection {
+  background: #f59e0b33;
+}

@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  BrowserRouter as Router,      // ← CAMBIO: BrowserRouter para URLs limpias
+  BrowserRouter as Router,      // ← BrowserRouter para URLs limpias
   Routes,
   Route,
   Navigate,
@@ -77,7 +77,7 @@ function AdminLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const avatarSrc = React.useMemo(
-    () => localStorage.getItem("adminAvatar") || `${BASE}logo.png`,
+    () => localStorage.getItem("adminAvatar") || `${BASE}avatar-admin.png`,
     []
   );
 
@@ -795,7 +795,7 @@ function SalesList() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [rows, setRows] = React.useState(() => lsGet("ventas")); // ← corregido
+  const [rows, setRows] = React.useState(() => lsGet("ventas"));
   React.useEffect(() => {
     setRows(lsGet("ventas"));
   }, [location.key]);
@@ -1264,7 +1264,7 @@ function SettingsPage() {
 // ========================= App (rutas) =========================
 export default function App() {
   return (
-    <Router basename={import.meta.env.BASE_URL}> {/* ← CAMBIO: basename para subruta /<repo>/ */}
+    <Router basename={import.meta.env.BASE_URL}> {/* ← IMPORTANTE: basename para subruta /<repo>/ */}
       <Routes>
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<LoginPage />} />
@@ -1274,4 +1274,3 @@ export default function App() {
     </Router>
   );
 }
-

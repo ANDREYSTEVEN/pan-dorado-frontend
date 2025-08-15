@@ -1,5 +1,4 @@
-
-import React from "react";
-export function Avatar({ className="", children }) { return <div className={`rounded-full bg-amber-100 overflow-hidden ${className}`}>{children}</div>; }
-export function AvatarImage({ src, alt }) { return <img src={src} alt={alt} className="w-full h-full object-cover" />; }
-export function AvatarFallback({ children }) { return <div className="w-full h-full flex items-center justify-center text-amber-700 font-semibold">{children}</div>; }
+import React from 'react'
+export const Avatar = ({ className='', children }) => <div className={`relative overflow-hidden rounded-full ${className}`}>{children}</div>
+export const AvatarImage = ({ src, alt='' }) => <img src={src} alt={alt} className="h-full w-full object-cover" />
+export const AvatarFallback = ({ children }) => <div className="flex h-full w-full items-center justify-center bg-amber-100 text-amber-800 text-sm">{children}</div>
