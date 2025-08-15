@@ -64,4 +64,4 @@ body {
 }
 
 /* Fondo translúcido de inputs sobre video (si quieres reforzar) */
-.input-surface { background: rgba(255,255,255,.95); backdrop-filter: blur(2px); }
+/*.input-surface { background: rgba(255,255,255,.95); backdrop-filter: blur(2px); }*/
