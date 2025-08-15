@@ -206,9 +206,8 @@ function EnvelopeCard({ children, logoSrc, brand }) {
     <div className="group relative mx-auto w-full max-w-lg [perspective:1400px]">
       <div className="relative overflow-hidden rounded-2xl border border-amber-100/80 bg-white/95 shadow-2xl transition-shadow duration-300 group-hover:shadow-[0_30px_80px_-20px_rgba(0,0,0,0.35)]">
 
-        {/* ===== 1) Fondo: dos cuñas con borde PLUMADO (sin líneas) ===== */}
+        {/* ===== Fondo: SOLO cuña izquierda, sin bordes duros ===== */}
         <div className="pointer-events-none absolute inset-0 z-0">
-          {/* Cuña izquierda (suave) */}
           <div
             className="
               absolute left-1/2 top-0 h-28 w-[170%] -translate-x-1/2 -translate-y-px
@@ -221,22 +220,9 @@ function EnvelopeCard({ children, logoSrc, brand }) {
               max-sm:opacity-0
             "
           />
-          {/* Cuña derecha (suave) */}
-          <div
-            className="
-              absolute right-[-8%] top-14 h-24 w-[150%]
-              [clip-path:polygon(100%_0%,100%_100%,0%_100%)]
-              bg-[linear-gradient(120deg,rgba(251,191,36,0.18),rgba(253,230,138,0.14),transparent_70%)]
-              [mask-image:linear-gradient(to_bottom,transparent,black_20%,black_80%,transparent)]
-              blur-[0.3px]
-              transition-opacity duration-500
-              group-hover:opacity-0 group-focus-within:opacity-0
-              max-sm:opacity-0
-            "
-          />
         </div>
 
-        {/* ===== 2) Fondo interactivo con logo (solo cuando está cerrada) ===== */}
+        {/* ===== Fondo interactivo con logo (visible SOLO cerrada) ===== */}
         <div
           className="
             pointer-events-none absolute inset-0 z-10 grid place-items-center
@@ -254,7 +240,7 @@ function EnvelopeCard({ children, logoSrc, brand }) {
           </div>
         </div>
 
-        {/* ===== 3) Solapa (flap) de apertura — se oculta al abrir ===== */}
+        {/* ===== Solapa (flap) — se oculta al abrir ===== */}
         <div
           className="
             absolute left-1/2 top-0 z-20 h-28 w-[130%] -translate-x-1/2 origin-top
@@ -277,7 +263,7 @@ function EnvelopeCard({ children, logoSrc, brand }) {
           "
         />
 
-        {/* ===== 4) Contenido (por encima de las cuñas) ===== */}
+        {/* ===== Contenido (encima) ===== */}
         <div
           className="
             relative z-30 px-8 pt-12 pb-8
@@ -294,6 +280,7 @@ function EnvelopeCard({ children, logoSrc, brand }) {
     </div>
   );
 }
+
 
 /* --- LOGIN PAGE (layout inicial + carta animada con logo de fondo) --- */
 function LoginPage() {
