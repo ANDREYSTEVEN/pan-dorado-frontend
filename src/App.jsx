@@ -206,21 +206,22 @@ function EnvelopeCard({ children, logoSrc, brand }) {
     <div className="group relative mx-auto w-full max-w-lg [perspective:1400px]">
       <div className="relative overflow-hidden rounded-2xl border border-amber-100/80 bg-white/95 shadow-2xl transition-shadow duration-300 group-hover:shadow-[0_30px_80px_-20px_rgba(0,0,0,0.35)]">
 
-        {/* ===== Fondo: SOLO cuña izquierda (suave) ===== */}
+        {/* ===== Fondo: banda suave superior (sin línea derecha) ===== */}
         <div className="pointer-events-none absolute inset-0 z-0">
           <div
             className="
-              absolute left-1/2 top-0 h-28 w-[170%] -translate-x-1/2 -translate-y-px
-              [clip-path:polygon(6%_0%,100%_52%,100%_100%,0%_100%,0%_42%)]
-              bg-[linear-gradient(120deg,rgba(251,191,36,0.22),rgba(253,230,138,0.16),transparent_70%)]
-              [mask-image:linear-gradient(to_bottom,transparent,black_18%,black_85%,transparent)]
+              absolute inset-x-0 top-0 h-28 -translate-y-px
+              /* Banda inclinada cálida */
+              bg-[linear-gradient(165deg,rgba(251,191,36,0.22)_20%,rgba(253,230,138,0.14)_40%,transparent_62%)]
+              /* Se difumina hacia la derecha antes del centro: evita 'rayas' */
+              [mask-image:linear-gradient(to_right,black_0%,black_52%,transparent_60%)]
               blur-[0.3px]
               transition-opacity duration-500
               group-hover:opacity-0 group-focus-within:opacity-0
               max-sm:opacity-0
             "
           />
-          {/* ⚠️ La cuña derecha se ELIMINA para evitar la raya sobre el texto */}
+          {/* ⚠️ No hay cuña derecha */}
         </div>
 
         {/* Fondo con logo mientras está cerrada */}
@@ -273,7 +274,6 @@ function EnvelopeCard({ children, logoSrc, brand }) {
     </div>
   );
 }
-
 
 
 /* --- LOGIN PAGE (layout inicial + carta animada con logo de fondo) --- */
