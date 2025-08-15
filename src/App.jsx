@@ -230,7 +230,7 @@ function EnvelopeCard({ children, logoSrc, brand }) {
           </div>
         </div>
 
-        {/* ===== Solapa (flap) — solo para la animación; se oculta al abrir ===== */}
+        {/* ===== Solapa (flap) — solo para la animación; se oculta al abrir ===== }
         <div
           className="
             absolute left-1/2 top-0 z-20 h-28 w-[130%] -translate-x-1/2 origin-top
