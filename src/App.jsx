@@ -206,18 +206,37 @@ function EnvelopeCard({ children, logoSrc, brand }) {
     <div className="group relative mx-auto w-full max-w-lg [perspective:1400px]">
       <div className="relative overflow-hidden rounded-2xl border border-amber-100/80 bg-white/95 shadow-2xl transition-shadow duration-300 group-hover:shadow-[0_30px_80px_-20px_rgba(0,0,0,0.35)]">
 
-        {/* 1) Cuña de fondo: SIEMPRE visible y por DEBAJO del contenido */}
-        <div
-          className="
-            pointer-events-none absolute left-1/2 top-0 z-0
-            h-32 w-[160%] -translate-x-1/2
-            [clip-path:polygon(55%_0%,100%_100%,0%_100%)]
-            bg-[linear-gradient(120deg,rgba(251,191,36,0.25),rgba(253,230,138,0.18),transparent_70%)]
-            blur-[0.5px]
-          "
-        />
+        {/* ===== 1) Fondo: dos cuñas con borde PLUMADO (sin líneas) ===== */}
+        <div className="pointer-events-none absolute inset-0 z-0">
+          {/* Cuña izquierda (suave) */}
+          <div
+            className="
+              absolute left-1/2 top-0 h-28 w-[170%] -translate-x-1/2 -translate-y-px
+              [clip-path:polygon(6%_0%,100%_52%,100%_100%,0%_100%,0%_42%)]
+              bg-[linear-gradient(120deg,rgba(251,191,36,0.22),rgba(253,230,138,0.16),transparent_70%)]
+              [mask-image:linear-gradient(to_bottom,transparent,black_18%,black_85%,transparent)]
+              blur-[0.3px]
+              transition-opacity duration-500
+              group-hover:opacity-0 group-focus-within:opacity-0
+              max-sm:opacity-0
+            "
+          />
+          {/* Cuña derecha (suave) */}
+          <div
+            className="
+              absolute right-[-8%] top-14 h-24 w-[150%]
+              [clip-path:polygon(100%_0%,100%_100%,0%_100%)]
+              bg-[linear-gradient(120deg,rgba(251,191,36,0.18),rgba(253,230,138,0.14),transparent_70%)]
+              [mask-image:linear-gradient(to_bottom,transparent,black_20%,black_80%,transparent)]
+              blur-[0.3px]
+              transition-opacity duration-500
+              group-hover:opacity-0 group-focus-within:opacity-0
+              max-sm:opacity-0
+            "
+          />
+        </div>
 
-        {/* 2) Fondo interactivo con logo (solo cuando está cerrada) */}
+        {/* ===== 2) Fondo interactivo con logo (solo cuando está cerrada) ===== */}
         <div
           className="
             pointer-events-none absolute inset-0 z-10 grid place-items-center
@@ -235,22 +254,30 @@ function EnvelopeCard({ children, logoSrc, brand }) {
           </div>
         </div>
 
-        {/* 3) Solapa (flap) animada — se oculta al abrir para evitar líneas */}
+        {/* ===== 3) Solapa (flap) de apertura — se oculta al abrir ===== */}
         <div
           className="
             absolute left-1/2 top-0 z-20 h-28 w-[130%] -translate-x-1/2 origin-top
             [clip-path:polygon(50%_0%,100%_100%,0%_100%)]
             bg-gradient-to-b from-amber-200 to-amber-100
+
+            /* Cerrada (visible) */
             [transform:perspective(1000px)_rotateX(0deg)] opacity-100
+
+            /* Abierta (hover/focus): rota hacia atrás y desvanece */
             group-hover:[transform:perspective(1000px)_rotateX(-120deg)_translateY(-6px)]
             group-focus-within:[transform:perspective(1000px)_rotateX(-120deg)_translateY(-6px)]
             group-hover:opacity-0 group-focus-within:opacity-0
-            max-sm:[transform:perspective(1000px)_rotateX(-120deg)_translateY(-6px)] max-sm:opacity-0
+
+            /* En móvil, abierta por defecto */
+            max-sm:[transform:perspective(1000px)_rotateX(-120deg)_translateY(-6px)]
+            max-sm:opacity-0
+
             transition-transform duration-500 ease-out transition-opacity
           "
         />
 
-        {/* 4) Contenido por ENCIMA de la cuña */}
+        {/* ===== 4) Contenido (por encima de las cuñas) ===== */}
         <div
           className="
             relative z-30 px-8 pt-12 pb-8
