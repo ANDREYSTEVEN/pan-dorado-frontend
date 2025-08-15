@@ -224,49 +224,59 @@ function LoginPage() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
-      {/* VIDEO de fondo */}
-      <video
-        className="absolute inset-0 h-full w-full object-cover"
-        autoPlay
-        muted
-        loop
-        playsInline
-        poster={`${BASE}hero-login-poster.jpg`}
-      >
-        <source src={`${BASE}hero-login.webm`} type="video/webm" />
-        <source src={`${BASE}hero-login.mp4`} type="video/mp4" />
-        {/* Fallback super básico si el navegador no soporta video */}
-        {/* <img src={`${BASE}hero-login.gif`} alt="" className="h-full w-full object-cover" /> */}
-      </video>
+    <div className="relative min-h-screen w-full grid lg:grid-cols-[1fr_minmax(560px,1fr)] bg-amber-50">
+      {/* Columna izquierda (hero) */}
+      <div className="relative hidden lg:block">
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${BASE}hero.jpg)` }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-amber-900/70 via-amber-700/60 to-orange-600/60" />
+        <div className="relative z-10 h-full flex items-end p-12 text-white">
+          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} className="max-w-lg">
+            <div className="flex items-center gap-3 mb-4">
+              <img src={`${BASE}logo.png`} alt="Panadería Pan Dorado" className="h-10 w-10 rounded" />
+              <h1 className="text-3xl font-extrabold tracking-tight">Panadería Pan Dorado</h1>
+            </div>
+            <p className="text-white/90 leading-relaxed">
+              Software de gestión para potenciar tu producción, ventas y distribución diaria.
+            </p>
+            <div className="mt-6 flex gap-2">
+              <Badge className="bg-white/90 text-amber-800">Calidad</Badge>
+              <Badge className="bg-white/90 text-amber-800">Confianza</Badge>
+              <Badge className="bg-white/90 text-amber-800">Sabor</Badge>
+            </div>
+          </motion.div>
+        </div>
+      </div>
 
-      {/* Capa de color para contraste del formulario */}
-      <div className="absolute inset-0 bg-gradient-to-br from-amber-900/60 via-amber-700/40 to-orange-600/35" />
+      {/* Columna derecha: fondo profesional + card */}
+      <div className="relative grid place-items-center py-20 px-6 md:px-10 lg:px-16 xl:px-24 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-white via-amber-50/70 to-white" />
+        <div className="absolute -right-40 -top-40 h-[60rem] w-[60rem] rotate-12 bg-[conic-gradient(from_220deg_at_50%_50%,#f59e0b22,#fbbf2420,#fde68a1a,transparent_60%)] blur-2xl" />
+        <div className="absolute -right-24 bottom-10 h-72 w-72 rounded-full bg-orange-200/35 blur-3xl" />
+        <div className="absolute -left-24 top-20 h-64 w-64 rounded-full bg-amber-300/30 blur-3xl" />
+        <svg className="absolute inset-0 opacity-[0.03] mix-blend-multiply pointer-events-none" aria-hidden="true">
+          <filter id="noiseFilter">
+            <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch" />
+          </filter>
+          <rect width="100%" height="100%" filter="url(#noiseFilter)" />
+        </svg>
 
-      {/* Ruido/grano sutil */}
-      <svg className="absolute inset-0 opacity-[0.05] mix-blend-multiply pointer-events-none" aria-hidden="true">
-        <filter id="noiseFilter">
-          <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch" />
-        </filter>
-        <rect width="100%" height="100%" filter="url(#noiseFilter)" />
-      </svg>
-
-      {/* Contenido: card centrado */}
-      <div className="relative z-10 grid min-h-screen place-items-center p-6 md:p-10">
-        <div className="w-full max-w-2xl">
-          <Card className="w-full max-w-lg mx-auto rounded-2xl border-amber-100/80 shadow-2xl backdrop-blur-[2px]">
+        <div className="relative z-10 w-full max-w-2xl">
+          <Card className="w-full max-w-lg mx-auto rounded-2xl border-amber-100/80 shadow-2xl">
             <CardHeader className="px-8 pt-8 pb-4 text-center">
               <div className="mx-auto h-14 w-14 rounded-2xl bg-amber-100 flex items-center justify-center shadow">
                 <img src={`${BASE}logo.png`} alt="logo" className="h-7 w-7" />
               </div>
-              <CardTitle className="mt-3 text-2xl text-amber-50">Inicia sesión</CardTitle>
-              <p className="text-sm text-amber-100/80">Accede al panel de administración</p>
+              <CardTitle className="mt-3 text-2xl text-amber-900">Inicia sesión</CardTitle>
+              <p className="text-sm text-neutral-500">Accede al panel de administración</p>
             </CardHeader>
 
             <CardContent className="px-8 pb-8">
               <form onSubmit={onSubmit} className="space-y-6">
                 <div className="grid gap-3">
-                  <Label htmlFor="email" className="text-amber-50">Correo</Label>
+                  <Label htmlFor="email">Correo</Label>
                   <Input
                     id="email"
                     type="email"
@@ -274,16 +284,16 @@ function LoginPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="h-11 text-[15px] bg-white/95"
+                    className="h-11 text-[15px]"
                   />
                 </div>
 
                 <div className="grid gap-3">
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="password" className="text-amber-50">Contraseña</Label>
+                    <Label htmlFor="password">Contraseña</Label>
                     <button
                       type="button"
-                      className="text-xs text-amber-100 hover:underline"
+                      className="text-xs text-amber-700 hover:underline"
                       onClick={() => alert("Implementa tu recuperación de contraseña")}
                     >
                       ¿Olvidaste tu contraseña?
@@ -297,36 +307,36 @@ function LoginPage() {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
-                      className="h-11 text-[15px] pr-9 bg-white/95"
+                      className="h-11 text-[15px] pr-9"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPass((v) => !v)}
-                      className="absolute inset-y-0 right-2 flex items-center px-2 text-neutral-500 hover:text-amber-200"
+                      className="absolute inset-y-0 right-2 flex items-center px-2 text-neutral-500 hover:text-amber-700"
                       aria-label={showPass ? "Ocultar contraseña" : "Mostrar contraseña"}
                     >
                       {showPass ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
-                    <input id="remember" type="checkbox" className="h-4 w-4 rounded border-amber-200 text-amber-600" defaultChecked />
-                    <Label htmlFor="remember" className="text-amber-50">Recordarme en este equipo</Label>
+                    <input id="remember" type="checkbox" className="h-4 w-4 rounded border-amber-300 text-amber-600" defaultChecked />
+                    <Label htmlFor="remember">Recordarme en este equipo</Label>
                   </div>
                 </div>
 
-                {error && <p className="text-sm text-red-200">{error}</p>}
+                {error && <p className="text-sm text-red-600">{error}</p>}
 
-                <Button type="submit" className="w-full h-11 text-[15px]">
+                <Button type="submit" className="w-full h-11 text-[15px]" disabled={loading}>
                   {loading ? "Ingresando..." : "Entrar"}
                 </Button>
 
-                <div className="pt-1 text-xs text-amber-100/80 text-center">
+                <div className="pt-1 text-xs text-neutral-500 text-center">
                   Al continuar aceptas nuestras{" "}
-                  <a className="underline hover:text-amber-200" href="#">
+                  <a className="underline hover:text-amber-700" href="#">
                     Condiciones
                   </a>{" "}
                   y{" "}
-                  <a className="underline hover:text-amber-200" href="#">
+                  <a className="underline hover:text-amber-700" href="#">
                     Privacidad
                   </a>
                   .
@@ -336,8 +346,7 @@ function LoginPage() {
           </Card>
         </div>
 
-        {/* Marca en la esquina inferior */}
-        <div className="absolute bottom-4 left-0 right-0 mx-auto text-center text-xs text-amber-100">
+        <div className="absolute bottom-4 left-0 right-0 mx-auto text-center text-xs text-neutral-500">
           © {new Date().getFullYear()} Panadería Pan Dorado — Todos los derechos reservados
         </div>
       </div>
