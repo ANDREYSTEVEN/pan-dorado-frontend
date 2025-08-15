@@ -201,9 +201,8 @@ function AdminLayout() {
 }
 
 // ========================= Login =========================
-export default function LoginPage() {
+function LoginPage() {
   const navigate = useNavigate();
-
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [showPass, setShowPass] = React.useState(false);
@@ -215,11 +214,15 @@ export default function LoginPage() {
     setError("");
     setLoading(true);
     try {
-      // Usa tu fakeAuth.signIn si existe; si no, el fallback
+      // Usa tu fakeAuth.signIn si lo tienes:
       const signIn =
-        typeof fakeAuth !== "undefined" && typeof fakeAuth.signIn === "function"
+        typeof fakeAuth?.signIn === "function"
           ? fakeAuth.signIn
-          : __fallbackSignIn;
+          : async (em, pw) => {
+              await new Promise((r) => setTimeout(r, 300));
+              if (!pw || pw.length < 4) throw new Error("Credenciales inválidas");
+              return { name: "Admin", email: em };
+            };
 
       await signIn(email, password);
       navigate("/admin");
@@ -230,41 +233,45 @@ export default function LoginPage() {
     }
   };
 
-  // atajos
   const BASE = import.meta.env.BASE_URL || "/";
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
-      {/* VIDEO de fondo */}
+    /* 100svh evita cortes en móviles; overflow permite scroll si el card crece */
+    <div className="relative min-h-svh overflow-y-auto">
+      {/* VIDEO de fondo fijo: cubre toda la ventana y no se mueve con el scroll */}
       <video
-        className="absolute inset-0 h-full w-full object-cover"
+        className="pointer-events-none fixed inset-0 h-full w-full object-cover"
         autoPlay
         muted
         loop
         playsInline
-        poster={`${BASE}panaderia-bg-poster.jpg`}     // <-- poster
+        poster={`${BASE}panaderia-bg-poster.jpg`}
       >
-        {/* Si generas la versión webm, déjala arriba del mp4 */}
+        {/* Si tienes WEBM, colócalo antes del MP4 */}
         {/* <source src={`${BASE}panaderia-bg.webm`} type="video/webm" /> */}
         <source src={`${BASE}panaderia-bg.mp4`} type="video/mp4" />
-        {/* Último fallback a gif/imagen (opcional) */}
-        {/* <img src={`${BASE}hero-login.gif`} alt="" className="h-full w-full object-cover" /> */}
       </video>
 
-      {/* Capa de contraste sobre el video */}
-      <div className="absolute inset-0 bg-gradient-to-br from-amber-900/60 via-amber-700/40 to-orange-600/35" />
+      {/* Degradado para contraste sobre el video */}
+      <div className="pointer-events-none fixed inset-0 bg-gradient-to-br from-amber-900/60 via-amber-700/40 to-orange-600/35" />
 
-      {/* Ruido/grano sutil para textura premium */}
-      <svg className="absolute inset-0 opacity-[0.05] mix-blend-multiply pointer-events-none" aria-hidden="true">
+      {/* Grano sutil */}
+      <svg className="pointer-events-none fixed inset-0 opacity-[0.05] mix-blend-multiply" aria-hidden="true">
         <filter id="noiseFilter">
           <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch" />
         </filter>
         <rect width="100%" height="100%" filter="url(#noiseFilter)" />
       </svg>
 
-      {/* Contenido: card centrado */}
-      <div className="relative z-10 grid min-h-screen place-items-center p-6 md:p-10">
-        <div className="w-full max-w-2xl">
+      {/* CONTENIDO: centrado; si es alto, hace scroll */}
+      <div className="relative z-10 flex min-h-svh items-center justify-center px-6 py-8 md:py-14">
+        <motion.div
+          initial={{ opacity: 0, y: 18, scale: 0.985 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.45, ease: "easeOut" }}
+          whileHover={{ scale: 1.005 }}
+          className="w-full max-w-2xl"
+        >
           <Card
             className={`w-full max-w-lg mx-auto rounded-2xl border-amber-100/80 shadow-2xl backdrop-blur-[2px] ${
               error ? "animate-shake" : ""
@@ -274,48 +281,46 @@ export default function LoginPage() {
               <div className="mx-auto h-14 w-14 rounded-2xl bg-amber-100 flex items-center justify-center shadow">
                 <img src={`${BASE}logo.png`} alt="logo" className="h-7 w-7" />
               </div>
-              <CardTitle className="mt-3 text-2xl text-white">Inicia sesión</CardTitle>
-              <p className="text-sm text-white/80">Accede al panel de administración</p>
+              <CardTitle className="mt-3 text-2xl text-amber-900">Inicia sesión</CardTitle>
+              <p className="text-sm text-amber-900/70">Accede al panel de administración</p>
             </CardHeader>
 
             <CardContent className="px-8 pb-8">
               <form onSubmit={onSubmit} className="space-y-6">
-                {/* Correo (floating label + micro animación) */}
-                <div className="grid gap-2">
-                  <div className="relative">
-                    <input
-                      id="email"
-                      type="email"
-                      placeholder=" " /* necesario para floating label */
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                      className="peer h-11 w-full rounded-xl border border-amber-200 bg-white/95 px-3 text-[15px] shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400 focus-glow"
-                    />
-                    <label
-                      htmlFor="email"
-                      className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 origin-left text-[14px] text-neutral-500 transition-all duration-200
-                                 peer-focus:-translate-y-5 peer-focus:scale-90 peer-focus:text-amber-700 peer-placeholder-shown:translate-y-1/2
-                                 peer-placeholder-shown:scale-100 peer-[&:not(:placeholder-shown)]:-translate-y-5 peer-[&:not(:placeholder-shown)]:scale-90
-                                 peer-focus:animate-jump"
-                    >
-                      Correo
-                    </label>
-                  </div>
+                {/* Correo (floating label) */}
+                <div className="relative">
+                  <input
+                    id="email"
+                    type="email"
+                    placeholder=" " /* necesario para floating label */
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    className="peer h-11 w-full rounded-xl border border-amber-200 bg-white/95 px-3 text-[15px] shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400 focus-glow"
+                  />
+                  <label
+                    htmlFor="email"
+                    className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 origin-left text-[14px] text-neutral-500 transition-all duration-200
+                               peer-focus:-translate-y-5 peer-focus:scale-90 peer-focus:text-amber-700 peer-placeholder-shown:translate-y-1/2
+                               peer-placeholder-shown:scale-100 peer-[&:not(:placeholder-shown)]:-translate-y-5 peer-[&:not(:placeholder-shown)]:scale-90"
+                  >
+                    Correo
+                  </label>
                 </div>
 
-                {/* Contraseña (floating + toggle mostrar/ocultar) */}
+                {/* Contraseña (floating + toggle) */}
                 <div className="grid gap-2">
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-transparent select-none">.</span>
                     <button
                       type="button"
-                      className="text-xs text-amber-100 hover:underline"
+                      className="text-xs text-amber-800/80 hover:underline"
                       onClick={() => alert("Implementa tu recuperación de contraseña")}
                     >
                       ¿Olvidaste tu contraseña?
                     </button>
                   </div>
+
                   <div className="relative">
                     <input
                       id="password"
@@ -330,8 +335,7 @@ export default function LoginPage() {
                       htmlFor="password"
                       className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 origin-left text-[14px] text-neutral-500 transition-all duration-200
                                  peer-focus:-translate-y-5 peer-focus:scale-90 peer-focus:text-amber-700 peer-placeholder-shown:translate-y-1/2
-                                 peer-placeholder-shown:scale-100 peer-[&:not(:placeholder-shown)]:-translate-y-5 peer-[&:not(:placeholder-shown)]:scale-90
-                                 peer-focus:animate-jump"
+                                 peer-placeholder-shown:scale-100 peer-[&:not(:placeholder-shown)]:-translate-y-5 peer-[&:not(:placeholder-shown)]:scale-90"
                     >
                       Contraseña
                     </label>
@@ -339,27 +343,21 @@ export default function LoginPage() {
                     <button
                       type="button"
                       onClick={() => setShowPass((v) => !v)}
-                      className="absolute inset-y-0 right-2 flex items-center px-2 text-neutral-500 hover:text-amber-200"
+                      className="absolute inset-y-0 right-2 flex items-center px-2 text-neutral-500 hover:text-amber-700"
                       aria-label={showPass ? "Ocultar contraseña" : "Mostrar contraseña"}
                     >
                       {showPass ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
                   </div>
 
-                  <label className="mt-1 flex items-center gap-2 text-sm text-amber-50/90">
-                    <input
-                      type="checkbox"
-                      defaultChecked
-                      className="h-4 w-4 rounded border-amber-200 text-amber-600"
-                    />
+                  <label className="mt-1 flex items-center gap-2 text-sm text-amber-900/80">
+                    <input type="checkbox" defaultChecked className="h-4 w-4 rounded border-amber-200 text-amber-600" />
                     Recordarme en este equipo
                   </label>
                 </div>
 
-                {/* Error */}
-                {error && <p className="text-sm text-red-200">{error}</p>}
+                {error && <p className="text-sm text-red-600">{error}</p>}
 
-                {/* Botón */}
                 <Button
                   type="submit"
                   disabled={loading}
@@ -368,24 +366,18 @@ export default function LoginPage() {
                   {loading ? "Ingresando..." : "Entrar"}
                 </Button>
 
-                <div className="pt-1 text-xs text-amber-100/80 text-center">
+                <div className="pt-1 text-xs text-amber-900/70 text-center">
                   Al continuar aceptas nuestras{" "}
-                  <a className="underline hover:text-amber-200" href="#">
-                    Condiciones
-                  </a>{" "}
-                  y{" "}
-                  <a className="underline hover:text-amber-200" href="#">
-                    Privacidad
-                  </a>
-                  .
+                  <a className="underline hover:text-amber-900" href="#">Condiciones</a> y{" "}
+                  <a className="underline hover:text-amber-900" href="#">Privacidad</a>.
                 </div>
               </form>
             </CardContent>
           </Card>
-        </div>
+        </motion.div>
 
-        {/* Footer marca */}
-        <div className="absolute bottom-4 left-0 right-0 mx-auto text-center text-xs text-amber-100">
+        {/* Footer */}
+        <div className="absolute bottom-4 left-0 right-0 mx-auto text-center text-xs text-amber-900/80">
           © {new Date().getFullYear()} Panadería Pan Dorado — Todos los derechos reservados
         </div>
       </div>

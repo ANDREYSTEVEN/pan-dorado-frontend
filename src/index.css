@@ -40,11 +40,11 @@ body {
   background: #f59e0b33;
 }
 /* ---------- Animaciones y utilidades para el login ---------- */
-@keyframes jump {
+/*@keyframes jump {
   0% { transform: translateY(0); }
   40% { transform: translateY(-6px); }
   100% { transform: translateY(0); }
-}
+}*/
 
 @keyframes shake {
   0%, 100% { transform: translateX(0); }
@@ -55,7 +55,7 @@ body {
 }
 
 /* Usables como clases de utilidad */
-.animate-jump { animation: jump .35s ease-out; }
+/*.animate-jump { animation: jump .35s ease-out; }*/
 .animate-shake { animation: shake .35s ease-in-out both; }
 
 /* Halo de enfoque suave en inputs */
